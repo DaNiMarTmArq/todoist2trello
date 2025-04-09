@@ -1,30 +1,38 @@
-from todoist_api_python.api import TodoistAPI
-from dotenv import load_dotenv
+from clients.todoist import TodoistClient
+from clients.trello import TrelloClient
 import os
+from dotenv import load_dotenv
+
 
 load_dotenv()
 
-key = os.environ["TODOIST_API_TOKEN"]
-api = TodoistAPI(key)
-inbox_id = os.environ["TODOIST_INBOX_ID"]
+TRELLO_API_KEY = os.getenv("TRELLO_API_KEY")
+TRELLO_API_TOKEN = os.getenv("TRELLO_TOKEN")
+TODOIST_API_KEY = os.getenv("TODOIST_API_TOKEN")
 
-def get_todoist_tasks(project_id: str) -> list[str]:
-    """
-    Get tasks from a Todoist project.
-    
-    :param project_id: The ID of the Todoist project.
-    :return: A list of tasks in the project.
-    """
-    task_response = api.get_tasks(project_id=project_id)
-    return [task.content for task in task_response]
+todoist_client = TodoistClient(TODOIST_API_KEY)
+trello_client = TrelloClient(TRELLO_API_KEY, TRELLO_API_TOKEN)
 
-try:
-    # Get tasks from the inbox
-    tasks = get_todoist_tasks(inbox_id)
+def main(): 
+    project_id = os.getenv("TODOIST_INBOX_ID")
+    trello_list_id = os.getenv("TRELLO_LIST_ID")
+
+    try:
+        # Get tasks from Todoist
+        tasks = todoist_client.get_tasks(project_id)
+    except Exception as e:
+        print(f"An error occurred while fetching tasks from Todoist: {e}")
+        tasks = []
+
+    try:
+        # Post tasks to Trello
+        for task in tasks:
+            trello_client.create_card(trello_list_id, task)
+            print(f"Task '{task}' have been successfully transferred from Todoist to Trello.")
+    except Exception as e:
+        print(f"An error occurred while posting tasks to Trello: {e}")
+
     
-    # Print the tasks
-    for task in tasks:
-        print(task)
-   
-except Exception as error:
-    print(error)
+
+if __name__ == "__main__":
+    main()
