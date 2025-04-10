@@ -19,7 +19,7 @@ def complete_todoist_tasks(tasks: list[Task]):
     for task in tasks:
         try:
             todoist_client.complete_task(task_id=task.id)
-            print(f"Task {task.id} marked as complete in Todoist\n")
+            print(f"Task '{task.content}' marked as complete in Todoist\n")
         except Exception as e:
             print(f"An error occurred while marking tasks as complete in Todoist: {e}")
    
