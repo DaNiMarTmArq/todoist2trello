@@ -1,4 +1,4 @@
-from todoist_api_python.api import TodoistAPI
+from todoist_api_python.api import TodoistAPI, Task
 
 
 class TodoistClient:
@@ -10,7 +10,7 @@ class TodoistClient:
         """
         self.api = TodoistAPI(api_key)
 
-    def get_tasks(self, project_id: str) -> list[str]:
+    def get_tasks(self, project_id: str) -> list[Task]:
         """
         Get tasks from a Todoist project.
         
@@ -18,7 +18,7 @@ class TodoistClient:
         :return: A list of task contents in the project.
         """
         task_response = self.api.get_tasks(project_id=project_id)
-        return [task.content for task in task_response]
+        return task_response
 
     def complete_task(self, task_id: str) -> bool:
         """
