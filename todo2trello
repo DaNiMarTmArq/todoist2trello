@@ -3,11 +3,22 @@
 # Define the base path
 BASE_PATH=~/task-automation
 
-# Activate the virtual environment
-source $BASE_PATH/taskauto/bin/activate
+# Default: no flag
+FLAG=""
 
-# Run the main.py file with the "-d" flag to complete the tasks by default
-python3 $BASE_PATH/main.py
+# Check for -d or -D in the arguments
+for arg in "$@"; do
+  if [[ "$arg" == "-d" || "$arg" == "-D" ]]; then
+    FLAG="-d"
+    break
+  fi
+done
+
+# Activate the virtual environment
+source "$BASE_PATH/taskauto/bin/activate"
+
+# Run the main.py file with the appropriate flag
+python3 "$BASE_PATH/main.py" $FLAG
 
 # Deactivate the virtual environment
 deactivate
