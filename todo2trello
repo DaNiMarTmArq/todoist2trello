@@ -1,10 +1,13 @@
 #!/bin/bash
 
+# Define the base path
+BASE_PATH=~/task-automation
+
 # Activate the virtual environment
-source ./taskauto/bin/activate
+source $BASE_PATH/taskauto/bin/activate
 
 # Run the main.py file with the "-d" flag to complete the tasks by default
-python3 main.py -d
+python3 $BASE_PATH/main.py
 
 # Deactivate the virtual environment
 deactivate
